@@ -1,5 +1,5 @@
 # SMC (Screen Manage Commands)
-Custom linux cmd(s) for manage several screen.
+Custom linux cmd(s) to manage several screen.
 
 ## Commands
 
