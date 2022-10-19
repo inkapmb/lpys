@@ -1,8 +1,8 @@
 # SMC
 Custom linux cmd(s) for manage several screen.
 
-# lpys
+## lpys
 Launch python script in other screen, and open it in a new terminal.
 
-#cnxscreen
-Connect to existing screen and open it in a new term.
+## cnxscreen
+Connect to existing screen and open it in a new terminal.
