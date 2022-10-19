@@ -1,4 +1,4 @@
-# SMC
+# SMC (Screen Manage Commands)
 Custom linux cmd(s) for manage several screen.
 
 ## lpys
