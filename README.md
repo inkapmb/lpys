@@ -1,2 +1,2 @@
-# lpys
-custom linux cmd for launch pys scripts in other screen
+# SMC
+Custom linux cmd(s) for manage several screen.
