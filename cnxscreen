@@ -1,0 +1,152 @@
+#!/bin/bash
+
+############################################################
+#Function                                                  #
+############################################################
+
+#Help
+
+Help()
+{
+printf "\033[90m############################################################\033[0m\n"
+printf "                       \033[1m\033[4mcnxscreen HELP\033[0m\n"
+printf "\033[90m############################################################\033[0m\n"
+printf "\n"
+printf "cnxscreen command allows to connect to screen while opennig them in an other terminal\n"
+printf "\n"
+printf "Requierement : \n"
+printf "	> have 'screen' installed\n"
+printf "	> have 'Konsole' installed\n"
+printf "	(> if it is used on server, be connected in ssh -X (graphic options))\n"
+printf "\n"
+printf "\033[1mSyntaxe :\033[0m \033[94mcnxscreen\033[0m [\033[94m-options\033[0m] [\033[94mscreen_name\033[0m]\n"
+printf "\n"
+printf "\033[1mOptions :\033[0m \n"
+printf "	\033[94m-h\033[0m	display this message\n"
+printf "\n"
+printf "\033[90m############################################################\033[0m\n"
+}
+
+#Warning sign
+
+wrn()
+{
+printf "\033[5m\033[1m\033[93m<!>\033[0m\e[25m"
+}
+
+############################################################
+#Main                                                      #
+############################################################
+
+#def Var
+
+co=1
+
+#get options
+
+while getopts ":h" option;
+do
+	case $option in
+	
+      		h) # display Help
+         		Help
+			((co++))
+         		exit;;
+				
+         	\?) # Invalid option
+         		echo "Error: Invalid option"
+         		exit;;
+   	esac
+done
+
+#manage pointer
+p_s_name=$(($co))
+s_name=${!p_s_name}
+
+#Get user name lentgh
+ncus=$((-${#USER} - 29))
+nct=$((-${#USER} - 29 - 36))
+
+#Main loop
+
+#loop var
+input=1
+flag=False
+
+#loop
+while [[ $flag == 'False' ]];
+do
+	#get screen list
+	sl=$(screen -ls)
+	
+	#get screen name if given
+	if [[ ${#s_name} != 0 ]] && [[ $input == 1 ]] ; then
+		input=0
+		s=$s_name
+	fi
+	
+	#Get '\n' pos of $sl in $bs
+	bs=("24")
+	for (( c=24; c<=${#sl}; c++ ))
+	do
+		if [[ ${sl:$c:2} == "d)" ]]; then
+			idl=$(($c + 4))
+			bs[${#bs[@]}]="$idl"
+		fi
+	done
+
+	#input
+	if [[ $input == 1 ]] ; then
+		printf "${sl:0:$ncus}\n"
+		read -p "Screen to Connect is : " s
+		input=0
+	elif [[ $input == 2 ]] ; then
+		wrn
+		printf " '\033[1m$s\033[0m' is not a screen, ${sl:0:$ncus}\nPlease choose one above : "
+		read -p "" s
+		input=0
+	elif [[ $input == 3 ]] ; then
+		wrn
+		printf " '\033[1m$s\033[0m' screen is already \033[90mAttached\033[0m, ${sl:0:$ncus}\nPlease choose one above \033[90mDetached\033[0m : "
+		read -p "" s
+		input=0
+	fi
+
+	#test if it's a screen
+	for (( c=0; c<=${#bs}-1; c++ ))
+	do
+		rid=${bs[$c]}
+		rl=$((${bs[$((c + 1))]} - ${bs[$c]} - 38 ))
+		
+		#ctrl str
+		#echo "s: $rid, l: $rl, tab: ${bs[@]} "
+		#echo "str : ${sl:$rid:$rl}"
+		#echo "${sl:$rid:6}"
+		#echo "${sl:$(($rid + 7)):$(($rl - 7))}"
+		
+		if [[ "${sl:$rid:$rl}" == "$s" ]] || [[ "${sl:$rid:6}" == "$s" ]] || [[ "${sl:$(($rid + 7)):$(($rl - 7))}" == "$s" ]] ; then
+			flag=True
+			
+			fl=$((${bs[$((c + 1))]} - ${bs[$c]}))
+		
+			#echo "$fl"
+			#echo "${sl:$rid:$fl}"
+			
+			#Test if the screen is Attached
+			if [[ $flag == 'True' ]] && [[ ${sl:$rid:$((${bs[$((c + 1))]} - ${bs[$c]}))} == *"(Attached)"* ]] ; then
+				flag=False
+				input=3
+			fi
+			
+			break
+		fi
+		
+		
+	done
+	if [[ $input != 3 ]] ; then
+		input=2
+	fi
+done
+
+#Get screen wanted in new term
+konsole -e bash -c "screen -r $s" & disown
