@@ -3,10 +3,10 @@ Custom linux cmd(s) for manage several screen.
 
 ## Commands
 
-***lpys***
+### lpys
 Launch python script in other screen and open it in a new terminal.
 
-***cnxscreen***
+### cnxscreen
 Connect to existing screen and open it in a new terminal.
 
 ## Requirement
@@ -14,5 +14,5 @@ Connect to existing screen and open it in a new terminal.
 Requierement :
 - have **screen** installed
 - have **Konsole** installed
-(- if it is used on server, be connected in **ssh -X** (graphic options))
+- on server, be connected in **ssh -X** (graphic options)
 
