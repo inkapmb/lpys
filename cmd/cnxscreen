@@ -118,13 +118,15 @@ do
 		rid=${bs[$c]}
 		rl=$((${bs[$((c + 1))]} - ${bs[$c]} - 38 ))
 		
+		idp=$(expr index "${sl:$rid:$rl}" ".")
+		
 		#ctrl str
 		#echo "s: $rid, l: $rl, tab: ${bs[@]} "
 		#echo "str : ${sl:$rid:$rl}"
-		#echo "${sl:$rid:6}"
-		#echo "${sl:$(($rid + 7)):$(($rl - 7))}"
+		#echo "${sl:$rid:$(($idp - 1))}"
+		#echo "${sl:$(($rid + $idp)):$(($rl - $idp))}"
 		
-		if [[ "${sl:$rid:$rl}" == "$s" ]] || [[ "${sl:$rid:6}" == "$s" ]] || [[ "${sl:$(($rid + 7)):$(($rl - 7))}" == "$s" ]] ; then
+		if [[ "${sl:$rid:$rl}" == "$s" ]] || [[ "${sl:$rid:$(($idp - 1))}" == "$s" ]] || [[ "${sl:$(($rid + $idp)):$(($rl - $idp))}" == "$s" ]] ; then
 			flag=True
 			
 			fl=$((${bs[$((c + 1))]} - ${bs[$c]}))
