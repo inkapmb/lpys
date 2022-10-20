@@ -113,7 +113,7 @@ do
 	fi
 
 	#test if it's a screen
-	for (( c=0; c<=${#bs}-1; c++ ))
+	for (( c=0; c<=${#bs}; c++ ))
 	do
 		rid=${bs[$c]}
 		rl=$((${bs[$((c + 1))]} - ${bs[$c]} - 38 ))
