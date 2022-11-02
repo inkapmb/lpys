@@ -30,6 +30,116 @@ printf "\n"
 printf "\033[90m############################################################\033[0m\n"
 }
 
+
+#search for substr in str
+ExprIdx()
+{
+	fpos=$( echo $1 | grep -o -b "$2" | awk 'BEGIN {FS=":"}{print $1}')
+	echo $fpos
+}
+
+
+#test_screen_on
+IsScreenOn()
+{
+	local s=$1
+	
+	#get screen list
+	local sl=$(screen -ls | grep '(*)' )
+	
+	#get number of line (or screen)
+	nl=$(($(printf "$sl"| wc -l) + 1))
+	
+	#default return param
+	exist=False
+	state=off
+	snumber=0
+	cnl=0
+
+	#test if it's a screen
+	for (( c=1; c<=$nl; c++ ))
+	do
+		#get the line $c
+		local sedopt=$(echo $c'p')
+		local line=$(printf "$sl"| sed -n $sedopt)
+		local length=$((${#line} - 36))
+		
+		#echo "$sedopt"
+		#echo "$line"
+		
+		#get . index in $line
+		local pidx=$(ExprIdx "$line" "\.")
+		
+		#put $pidx in array
+		IFS=' ' read -a idxl <<< "$pidx"
+		
+		local idp=$((${idxl[0]} + 1))
+		local lidx=$((${idxl[-1]} + 2))
+		
+		#ctrl str1
+		#echo "${line:$lidx:1}"
+		
+		#count the length of the number (str)
+		while [[ "${line:$(($lidx + $cnl)):1}" =~ ^[0-9]+$ ]] ; do
+			cnl=$(($cnl + 1))
+		done
+		
+		#get number of the screen
+		if [[ $cnl != 0 ]] ; then
+			snumber=${line:$lidx:$cnl}
+		else
+			snumber=0
+		fi
+		
+		#ctrl str2
+		#echo "str : ${line:0:$length}"
+		#echo "${line:0:$idp}"
+		#echo "${line:$(($idp + 1)):$(($length - $idp - 1))}"
+		
+		#test if screen Exist
+		if [[ "${line:0:$length}" == "$s" ]] || [[ "${line:0:$idp}" == "$s" ]] || [[ "${line:$(($idp + 1)):$(($length - $idp - 1))}" == "$s" ]] || [[ "${line:$(($idp + 1)):$(($length - $idp))}" == "$s."* ]] ; then
+			exist=True
+						
+			#ctrl str 3
+			#echo "${line:0:$length}"
+		
+			#Test if the screen is Attached
+			if [[ ${line:0:$length} == *"(Attached)"* ]] ; then
+				state=on
+			fi	
+			break
+		fi	
+	done
+
+
+	echo "$exist.$state.$snumber.$cnl"
+}
+
+#warning sign
+wrn()
+{
+	printf "\033[5m\033[1m\033[93m<!>\033[0m\e[25m"
+}
+
+#exist msg
+Exist()
+{
+printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m.\n"
+}
+
+#exist and open msg
+ExistOpen()
+{
+printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m and is \e[38;5;210mopen\e[0m.\n"
+}
+
+#rename msg
+Rename()
+{
+printf "\e[38;5;104m$1\e[0m was launched in \033[1m$2\033[0m renamed screen.\n"
+}
+
+
 ############################################################
 #Main                                                      #
 ############################################################
@@ -86,14 +196,48 @@ done
 name=$(($co))
 p_s_name=$(($co + 1))
 s_name=${!p_s_name}
-
 rfpath=$(realpath -e ${!name})
+
 if [[ ${#s_name} == 0 ]]; then
 	s_name=${!name}
 fi
 
+#test if screen already exist with this name
+res=$(IsScreenOn $s_name)
+
+echo $res
+
+#Manage screen name according to $res
+if [[ $res == "True."* ]] ; then
+	
+	#get . index
+	pidx=$(ExprIdx "$res" "\.")
+	#put it in array
+	IFS=' ' read -a idarr <<< "$pidx"
+	
+	#echo ${idarr[@]}
+	
+	nl=${res:$((${idarr[-1]} + 1)):1}
+	
+	old_s_name="$s_name"
+	s_name="$s_name.$((${res:$((${idarr[-2]} + 1)):$nl} + 1))"
+		
+	if [[ $res == *".on"* ]] ; then
+		wrn
+		ExistOpen $old_s_name
+		Rename ${!name} $s_name
+		
+	elif [[ $res == *".off"* ]] ; then 
+		wrn
+		Exist $old_s_name
+		Rename ${!name} $s_name
+		
+	fi
+fi
+
+
 #set simu with $nt core
-if [[ "$tc" == "s" ]] || [[ "$tc" == 'set' ]];
+if [[ "$tc" == "s" ]] || [[ "$tc" == 'set' ]] ;
 then
 	set -o xtrace
 	export OPENBLAS_NUM_THREADS=$nt
