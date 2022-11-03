@@ -1,0 +1,169 @@
+#!/bin/bash
+
+############################################################
+#Function                                                  #
+############################################################
+
+#Help
+
+Help()
+{
+printf "\033[90m############################################################\033[0m\n"
+printf "                          \033[1m\033[4mlns HELP\033[0m\n"
+printf "\033[90m############################################################\033[0m\n"
+printf "\n"
+printf "lns command launch command in an other 'screen' and open it in a new terminal.\n"
+printf "\n"
+printf "Requierement : \n"
+printf "	> have 'screen' installed\n"
+printf "	> have 'Konsole' installed\n"
+printf "	(> if it is used on a server, be connected in ssh -X (graphic options))\n"
+printf "\n"
+printf "\033[1mSyntaxe :\033[0m \033[94mlns\033[0m [\033[94m-options\033[0m] \033[94mcmd\033[0m [\033[94mscreen_name\033[0m]\n"
+printf "\n"
+printf "\033[1mOptions :\033[0m \n"
+printf "	\033[94m-h\033[0m	display this message\n"
+printf "	\033[94m-c\033[0m	close screen after execution\n"
+printf "\n"
+printf "\n"
+printf "\033[90m############################################################\033[0m\n"
+}
+
+
+#search for substr in str
+ExprIdx()
+{
+	fpos=$( echo $1 | grep -o -b "$2" | awk 'BEGIN {FS=":"}{print $1}')
+	echo $fpos
+}
+
+#warning sign
+wrn()
+{
+	printf "\033[5m\033[1m\033[93m<!>\033[0m\e[25m"
+}
+
+#exist msg
+Exist()
+{
+	printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m.\n"
+}
+
+#exist and open msg
+ExistOpen()
+{
+	printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m and is \e[38;5;210mopen\e[0m.\n"
+}
+
+#rename msg
+Rename()
+{
+	printf "\e[38;5;104m$1\e[0m was launched in \033[1m$2\033[0m renamed screen.\n"
+}
+
+
+############################################################
+#Main                                                      #
+############################################################
+
+#def var
+
+co=1
+cend=False
+
+#get options
+
+while getopts ":hc:" option;
+do
+	case $option in
+	
+      		h) # display Help
+         		Help
+			((co++))
+         		exit;;
+		c) #close screen after exec
+			cend=True
+			((co++))
+			;;
+				
+         	\?) # Invalid option
+         		echo "Error: Invalid option"
+         		exit;;
+   	esac
+done
+
+
+#manage pointer
+p_cmd=$(($co))
+cmd=${!p_cmd}
+con=$co
+
+p_s_name=$(($con + 1))
+s_name=${!p_s_name}
+
+#echo $cmd $s_name
+
+#screen name
+if [[ ${#s_name} == 0 ]]; then
+	s_name="cmd_screen"
+	wrn
+	printf " No screen name provide, screen was named \e[1m$s_name\e[0m.\n"
+	
+fi
+
+#test if screen already exist with this name
+res=$(ison $s_name)
+
+#echo $res
+
+#Manage screen name according to $res
+if [[ $res == "True "* ]] ; then
+	
+	#get space index
+	pidx=$(ExprIdx "$res" "\ ")
+	#put it in array
+	IFS=' ' read -a idarr <<< "$pidx"
+	
+	#echo ${idarr[@]}
+	
+	nl=${res:$((${idarr[-1]} + 1)):1}
+	
+	old_s_name="$s_name"
+	s_name="$s_name.$((${res:$((${idarr[-2]} + 1)):$nl} + 1))"
+		
+	if [[ $res == *" on"* ]] ; then
+		wrn
+		ExistOpen $old_s_name
+		Rename "$cmd" $s_name
+		
+	elif [[ $res == *" off"* ]] ; then 
+		wrn
+		Exist $old_s_name
+		Rename "$cmd" $s_name
+		
+	fi
+fi
+
+#launch in screen and open new term
+
+if [[ ${#cmd} != 0 ]]; then
+	if [[ $cend == "True" ]] ; then
+		cmd=$(echo "$cmd; exit;")
+	fi
+	
+	#bash_cmd=$(echo 'bash -c '"$cmd")
+	
+	screen -dmS $s_name bash -c "$cmd"
+	konsole -e bash -c "screen -r $s_name" & disown
+else
+	#bash_cmd=''
+	screen -dmS $s_name
+	konsole -e bash -c "screen -r $s_name" & disown
+fi
+
+#echo $cmd
+#echo $bash_cmd
+
+
+
+
