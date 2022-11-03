@@ -93,7 +93,7 @@ s=${!p_s}
 sl=$(screen -ls | grep '(*)' )
 
 #get number of line (or screen)
-nl=$( echo "${a}" | wc -l ) 
+nl=$( echo "${sl}" | wc -l ) 
 
 #default return param
 exist=False
@@ -104,14 +104,11 @@ cnl=0
 #test if it's a screen
 for (( c=1; c<=$nl; c++ ))
 do
-	
+
 	#get the line $c
 	sedopt=$(echo $c'p')
 	line=$(printf "$sl"| sed -n $sedopt)
 	length=$((${#line} - 36))
-	
-	#echo "$sedopt"
-	#echo "$line"
 	
 	#get . index in $line
 	pidx=$(ExprIdx "$line" "\.")
@@ -143,13 +140,13 @@ do
 	#echo "${line:1:$length}"
 	#echo "${line:1:$idp}"
 	#echo "${line:$(($idp + 2)):$(($length - $idp - 2))}"
-	#echo "${line:$(($idp + 2)):$(($length - $lidx + $cnl + 1))}"
+	#echo "${line:$(($idp + 2)):$(($length - $lidx))}"
 	
 	#test if screen Exist
-	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] | [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $lidx + $cnl + 1))}" == "$s."* ]] ; then
+	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] | [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s."* ]] ; then
 		
 		exist=True
-	
+		
 		#Test if the screen is Attached
 		if [[ ${line} == *"(Attached)"* ]] ; then
 			state=on
@@ -187,5 +184,6 @@ if [[ $opt == "True" ]] ; then
 else
 	printf "$exist $state $snumber $cnl\n"
 fi
+
 
 
