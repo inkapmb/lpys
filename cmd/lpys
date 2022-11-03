@@ -9,23 +9,22 @@
 Help()
 {
 printf "\033[90m############################################################\033[0m\n"
-printf "                          \033[1m\033[4mlpys HELP\033[0m\n"
+printf "                          \033[1m\033[4mlns HELP\033[0m\n"
 printf "\033[90m############################################################\033[0m\n"
 printf "\n"
-printf "lpys command launch python script in an other 'screen' and open it in a new terminal.\n"
+printf "lns command launch command in an other 'screen' and open it in a new terminal.\n"
 printf "\n"
 printf "Requierement : \n"
 printf "	> have 'screen' installed\n"
 printf "	> have 'Konsole' installed\n"
 printf "	(> if it is used on a server, be connected in ssh -X (graphic options))\n"
 printf "\n"
-printf "\033[1mSyntaxe :\033[0m \033[94mlpys\033[0m [\033[94m-options\033[0m] \033[94mfile.py\033[0m [\033[94mscreen_name\033[0m]\n"
+printf "\033[1mSyntaxe :\033[0m \033[94mlns\033[0m [\033[94m-options\033[0m] \033[94mcmd\033[0m [\033[94mscreen_name\033[0m]\n"
 printf "\n"
 printf "\033[1mOptions :\033[0m \n"
-printf "	\033[94m-s\033[0m	solo threaded\n"
-printf "	\033[94m-m\033[0m	multi threaded\n"
-printf "	\033[94m-n\033[0m [\033[94mnumber_of_thread\033[0m] allows number of threads\n"
-printf "	\033[94m-i\033[0m	let user interact user with python shell after execution\n"
+printf "	\033[94m-h\033[0m	display this message\n"
+printf "	\033[94m-c\033[0m	close screen after execution\n"
+printf "\n"
 printf "\n"
 printf "\033[90m############################################################\033[0m\n"
 }
@@ -38,83 +37,6 @@ ExprIdx()
 	echo $fpos
 }
 
-
-#test_screen_on
-IsScreenOn()
-{
-	local s=$1
-	
-	#get screen list
-	local sl=$(screen -ls | grep '(*)' )
-	
-	#get number of line (or screen)
-	nl=$(($(printf "$sl"| wc -l) + 1))
-	
-	#default return param
-	exist=False
-	state=off
-	snumber=0
-	cnl=0
-
-	#test if it's a screen
-	for (( c=1; c<=$nl; c++ ))
-	do
-		#get the line $c
-		local sedopt=$(echo $c'p')
-		local line=$(printf "$sl"| sed -n $sedopt)
-		local length=$((${#line} - 36))
-		
-		#echo "$sedopt"
-		#echo "$line"
-		
-		#get . index in $line
-		local pidx=$(ExprIdx "$line" "\.")
-		
-		#put $pidx in array
-		IFS=' ' read -a idxl <<< "$pidx"
-		
-		local idp=$((${idxl[0]} + 1))
-		local lidx=$((${idxl[-1]} + 2))
-		
-		#ctrl str1
-		#echo "${line:$lidx:1}"
-		
-		#count the length of the number (str)
-		while [[ "${line:$(($lidx + $cnl)):1}" =~ ^[0-9]+$ ]] ; do
-			cnl=$(($cnl + 1))
-		done
-		
-		#get number of the screen
-		if [[ $cnl != 0 ]] ; then
-			snumber=${line:$lidx:$cnl}
-		else
-			snumber=0
-		fi
-		
-		#ctrl str2
-		#echo "str : ${line:0:$length}"
-		#echo "${line:0:$idp}"
-		#echo "${line:$(($idp + 1)):$(($length - $idp - 1))}"
-		
-		#test if screen Exist
-		if [[ "${line:0:$length}" == "$s" ]] || [[ "${line:0:$idp}" == "$s" ]] || [[ "${line:$(($idp + 1)):$(($length - $idp - 1))}" == "$s" ]] || [[ "${line:$(($idp + 1)):$(($length - $idp))}" == "$s."* ]] ; then
-			exist=True
-						
-			#ctrl str 3
-			#echo "${line:0:$length}"
-		
-			#Test if the screen is Attached
-			if [[ ${line:0:$length} == *"(Attached)"* ]] ; then
-				state=on
-			fi	
-			break
-		fi	
-	done
-
-
-	echo "$exist.$state.$snumber.$cnl"
-}
-
 #warning sign
 wrn()
 {
@@ -124,19 +46,19 @@ wrn()
 #exist msg
 Exist()
 {
-printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m.\n"
+	printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m.\n"
 }
 
 #exist and open msg
 ExistOpen()
 {
-printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m and is \e[38;5;210mopen\e[0m.\n"
+	printf " \033[1m$1\033[0m screen already \e[38;5;210mexist\e[0m and is \e[38;5;210mopen\e[0m.\n"
 }
 
 #rename msg
 Rename()
 {
-printf "\e[38;5;104m$1\e[0m was launched in \033[1m$2\033[0m renamed screen.\n"
+	printf "\e[38;5;104m$1\e[0m was launched in \033[1m$2\033[0m renamed screen.\n"
 }
 
 
@@ -147,12 +69,11 @@ printf "\e[38;5;104m$1\e[0m was launched in \033[1m$2\033[0m renamed screen.\n"
 #def var
 
 co=1
-flag=''
-pyop=''
+cend=False
 
 #get options
 
-while getopts ":hsmni:" option;
+while getopts ":hc:" option;
 do
 	case $option in
 	
@@ -160,28 +81,8 @@ do
          		Help
 			((co++))
          		exit;;
-         		
-         	s)
-         		tc='set'
-			nt=1
-			((co++))
-			;;
-			
-		m)
-			tc='m'
-			nt=$(nproc)
-			((co++))
-			;;
-			
-		n)
-			tc='set'
-			nt=$(($co))
-			flag='nt'
-			co=$(($co + 2))
-			;;
-			
-		i)
-			pyop='-i'
+		c) #close screen after exec
+			cend=True
 			((co++))
 			;;
 				
@@ -193,25 +94,33 @@ done
 
 
 #manage pointer
-name=$(($co))
-p_s_name=$(($co + 1))
-s_name=${!p_s_name}
-rfpath=$(realpath -e ${!name})
+p_cmd=$(($co))
+cmd=${!p_cmd}
+con=$co
 
+p_s_name=$(($con + 1))
+s_name=${!p_s_name}
+
+#echo $cmd $s_name
+
+#screen name
 if [[ ${#s_name} == 0 ]]; then
-	s_name=${!name}
+	s_name="cmd_screen"
+	wrn
+	printf " No screen name provide, screen was named \e[1m$s_name\e[0m.\n"
+	
 fi
 
 #test if screen already exist with this name
-res=$(IsScreenOn $s_name)
+res=$(ison $s_name)
 
-echo $res
+#echo $res
 
 #Manage screen name according to $res
-if [[ $res == "True."* ]] ; then
+if [[ $res == "True "* ]] ; then
 	
-	#get . index
-	pidx=$(ExprIdx "$res" "\.")
+	#get space index
+	pidx=$(ExprIdx "$res" "\ ")
 	#put it in array
 	IFS=' ' read -a idarr <<< "$pidx"
 	
@@ -222,29 +131,30 @@ if [[ $res == "True."* ]] ; then
 	old_s_name="$s_name"
 	s_name="$s_name.$((${res:$((${idarr[-2]} + 1)):$nl} + 1))"
 		
-	if [[ $res == *".on"* ]] ; then
+	if [[ $res == *" on"* ]] ; then
 		wrn
 		ExistOpen $old_s_name
-		Rename ${!name} $s_name
+		Rename "$cmd" $s_name
 		
-	elif [[ $res == *".off"* ]] ; then 
+	elif [[ $res == *" off"* ]] ; then 
 		wrn
 		Exist $old_s_name
-		Rename ${!name} $s_name
+		Rename "$cmd" $s_name
 		
 	fi
 fi
 
+#launch in screen and open new term
 
-#set simu with $nt core
-if [[ "$tc" == "s" ]] || [[ "$tc" == 'set' ]] ;
-then
-	set -o xtrace
-	export OPENBLAS_NUM_THREADS=$nt
-	export OMP_NUM_THREADS=$nt
+if [[ ${#cmd} != 0 ]]; then
+	if [[ $cend == "True" ]] ; then
+		cmd=$(echo "$cmd; exit;")
+	fi
+	screen -dmS $s_name bash -c "$cmd"
+	konsole -e bash -c "screen -r $s_name" & disown
+else
+	screen -dmS $s_name
+	konsole -e bash -c "screen -r $s_name" & disown
 fi
 
 
-#launch in screen and open new term
-screen -dmS $s_name bash -c "python3 $pyop '$rfpath'; exit;"
-konsole -e bash -c "screen -r $s_name" & disown
