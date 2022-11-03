@@ -3,11 +3,18 @@ Custom linux cmd(s) to manage several screen.
 
 ## Commands
 
+### lns
+Launch evrything in an other screen session and open it in a new terminal.
+
 ### lpys
-Launch python script in other screen and open it in a new terminal.
+Launch python script in other screen session and open it in a new terminal.
 
 ### cnxscreen
-Connect to existing screen and open it in a new terminal.
+Connect to existing screen session and open it in a new terminal.
+
+### ison
+Give information about wanted screen session
+
 
 ## Requirement
 
