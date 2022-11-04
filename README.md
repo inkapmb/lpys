@@ -17,7 +17,7 @@ Requierement :
 ## Commands
 
 <sup>
-Optionnal keys are given like [key] in syntaxe part.
+Optionnal input keys are given like this : [key]
 </sup>
 
 ### lns
@@ -46,17 +46,18 @@ lpys [-options] file.py [screen_name]
 &emsp; ```-n [number_of_thread]``` &emsp; allows number of threads<br/>
 &emsp; ```-i``` &emsp; let user interact user with python shell after execution<br/>
         
-### cnxscreen
+### scnx
 Connect to existing screen session and open it in a new terminal.
 
 ```
-//////// 
+scnx [-options] [screen_name]
 ```
+&emsp; ***Options***<br/>
+
+&emsp; ```-h``` &emsp; display help message<br/>
 
 ### ison
 Give information about wanted screen session.
-
-&emsp; ***Syntaxe***<br/>
 
 ```
 ison screen_name
