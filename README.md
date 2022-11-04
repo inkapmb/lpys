@@ -23,8 +23,6 @@ Optionnal keys are given like [key] in syntaxe part.
 ### lns
 Launch evrything in an other screen session and open it in a new terminal.
 
-<!-- &emsp; ***Syntaxe***<br/> -->
-
 ```
 lns [-options] [command] [screen_name]
 ```
@@ -37,13 +35,11 @@ lns [-options] [command] [screen_name]
 ### lpys
 Launch python script in other screen session and open it in a new terminal.
 
-&emsp; ***Syntaxe***<br/>
-
 ```
 lpys [-options] file.py [screen_name]
 ```
 
-&emsp; - **Options**<br/>
+&emsp; ***Options***<br/>
 
 &emsp; ```-s``` &emsp; solo threaded<br/>
 &emsp; ```-m``` &emsp; multi threaded<br/>
@@ -53,8 +49,6 @@ lpys [-options] file.py [screen_name]
 ### cnxscreen
 Connect to existing screen session and open it in a new terminal.
 
-> **Syntaxe**<br/>
-
 ```
 //////// 
 ```
@@ -62,12 +56,12 @@ Connect to existing screen session and open it in a new terminal.
 ### ison
 Give information about wanted screen session.
 
-&emsp; - **Syntaxe**<br/>
+&emsp; ***Syntaxe***<br/>
 
 ```
 ison screen_name
 ```
-&emsp; - **Options**<br/>
+&emsp; ***Options***<br/>
 
 &emsp; ```-h``` &emsp; display help message<br/>
 &emsp; ```-e``` &emsp; output [exist]<br/>
@@ -75,7 +69,7 @@ ison screen_name
 &emsp; ```-n``` &emsp; output [number]<br/>
 &emsp; ```-l``` &emsp; output [number_length]<br/>
 
-&emsp; - **Output**<br/>
+&emsp; ***Output***<br/>
 
 &emsp; exist:[```True/False```] state:[```on/off```] number[```int```] number_length[```int```]
 
