@@ -23,13 +23,13 @@ Optionnal keys are given like [key] in syntaxe part.
 ### lns
 Launch evrything in an other screen session and open it in a new terminal.
 
-&emsp; - **Syntaxe**<br/>
+<!-- &emsp; ***Syntaxe***<br/> -->
 
 ```
 lns [-options] [command] [screen_name]
 ```
 
-&emsp; - **Options**<br/>
+&emsp; ***Options***<br/>
 
 &emsp; ```-h``` &emsp; display help message<br/>
 &emsp; ```-c``` &emsp; close screen after execution<br/>
@@ -37,7 +37,7 @@ lns [-options] [command] [screen_name]
 ### lpys
 Launch python script in other screen session and open it in a new terminal.
 
-&emsp; - **Syntaxe**<br/>
+&emsp; ***Syntaxe***<br/>
 
 ```
 lpys [-options] file.py [screen_name]
