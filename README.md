@@ -24,8 +24,8 @@ lns [-options] [command] [screen_name]
 
 > **Options**<br/>
 
-```-h```      display help message<br/>
-```-c```      close screen after execution<br/>
+```-h``` &emsp; display help message<br/>
+```-c``` &emsp; close screen after execution<br/>
 
 ### lpys
 Launch python script in other screen session and open it in a new terminal.
