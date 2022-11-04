@@ -107,7 +107,7 @@ s_name=${!p_s_name}
 if [[ ${#s_name} == 0 ]]; then
 	s_name="cmd_screen"
 	wrn
-	printf " No screen name provide, screen was named \e[1m$s_name\e[0m.\n"
+	printf " No screen name provided, screen was named \e[1m$s_name\e[0m.\n"
 	
 fi
 
