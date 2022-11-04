@@ -11,7 +11,7 @@ Requierement :
 ## Install
 
 ```
-./install.sh
+sudo ./install.sh
 ```
 
 ## Commands
