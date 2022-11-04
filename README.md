@@ -16,37 +16,37 @@ Optionnal keys are given like [key] in syntaxe part.
 ### lns
 Launch evrything in an other screen session and open it in a new terminal.
 
-#### Syntaxe
+**Syntaxe**<br/>
 
 ```
 lns [-options] [command] [screen_name]
 ```
 
-#### Options
+**Options**<br/>
 
-```-h```      display this message
-```-c```      close screen after execution
+```-h```      display this message<br/>
+```-c```      close screen after execution<br/>
 
 ### lpys
 Launch python script in other screen session and open it in a new terminal.
 
-#### Syntaxe
+**Syntaxe**<br/>
 
 ```
 lpys [-options] file.py [screen_name]
 ```
 
-#### Options 
+**Options**<br/>
 
-```-s```      solo threaded
-```-m```      multi threaded
-```-n [number_of_thread]``` allows number of threads
-```-i```      let user interact user with python shell after execution
+```-s```      solo threaded<br/>
+```-m```      multi threaded<br/>
+```-n [number_of_thread]``` allows number of threads<br/>
+```-i```      let user interact user with python shell after execution<br/>
         
 ### cnxscreen
 Connect to existing screen session and open it in a new terminal.
 
-#### Syntaxe
+**Syntaxe**<br/>
 
 ```
 //////// 
@@ -55,17 +55,21 @@ Connect to existing screen session and open it in a new terminal.
 ### ison
 Give information about wanted screen session.
 
-#### Syntaxe
+**Syntaxe**<br/>
 
-#### Options
+```
+ison screen_name
+```
 
-```-h```      display this message
-```-e```      output [exist]
-```-s```      output [state]
-```-n```      output [number]
-```-l```      output [number_length]
+**Options**<br/>
 
-#### Output 
+```-h```      display this message<br/>
+```-e```      output [exist]<br/>
+```-s```      output [state]<br/>
+```-n```      output [number]<br/>
+```-l```      output [number_length]<br/>
+
+**Output**<br/>
 
 exist:[```True/False```] state:[```on/off```] number[```int```] number_length[```int```]
 
