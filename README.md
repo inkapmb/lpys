@@ -22,7 +22,7 @@ Launch evrything in an other screen session and open it in a new terminal.
 lns [-options] [command] [screen_name]
 ```
 
-**Options**<br/>
+> **Options**<br/>
 
 ```-h```      display help message<br/>
 ```-c```      close screen after execution<br/>
@@ -30,13 +30,13 @@ lns [-options] [command] [screen_name]
 ### lpys
 Launch python script in other screen session and open it in a new terminal.
 
-**Syntaxe**<br/>
+> **Syntaxe**<br/>
 
 ```
 lpys [-options] file.py [screen_name]
 ```
 
-**Options**<br/>
+> **Options**<br/>
 
 ```-s```      solo threaded<br/>
 ```-m```      multi threaded<br/>
@@ -46,7 +46,7 @@ lpys [-options] file.py [screen_name]
 ### cnxscreen
 Connect to existing screen session and open it in a new terminal.
 
-**Syntaxe**<br/>
+> **Syntaxe**<br/>
 
 ```
 //////// 
@@ -55,21 +55,21 @@ Connect to existing screen session and open it in a new terminal.
 ### ison
 Give information about wanted screen session.
 
-**Syntaxe**<br/>
+> **Syntaxe**<br/>
 
 ```
 ison screen_name
 ```
 
-**Options**<br/>
+> **Options**<br/>
 
-```-h```      display help message<br/>
-```-e```      output [exist]<br/>
-```-s```      output [state]<br/>
-```-n```      output [number]<br/>
-```-l```      output [number_length]<br/>
+```-h```        display help message<br/>
+```-e```        output [exist]<br/>
+```-s```        output [state]<br/>
+```-n```        output [number]<br/>
+```-l```        output [number_length]<br/>
 
-**Output**<br/>
+> **Output**<br/>
 
 exist:[```True/False```] state:[```on/off```] number[```int```] number_length[```int```]
 
