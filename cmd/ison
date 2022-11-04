@@ -140,10 +140,9 @@ do
 	#echo "${line:1:$length}"
 	#echo "${line:1:$idp}"
 	#echo "${line:$(($idp + 2)):$(($length - $idp - 2))}"
-	#echo "${line:$(($idp + 2)):$(($length - $lidx))}"
 	
 	#test if screen Exist
-	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] | [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s."* ]] ; then
+	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - 2))}" == "$s."* ]] ; then
 		
 		exist=True
 		
@@ -184,6 +183,3 @@ if [[ $opt == "True" ]] ; then
 else
 	printf "$exist $state $snumber $cnl\n"
 fi
-
-
-
