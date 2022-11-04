@@ -93,7 +93,11 @@ s=${!p_s}
 sl=$(screen -ls | grep '(*)' )
 
 #get number of line (or screen)
-nl=$( echo "${sl}" | wc -l ) 
+if [[ ${#sl} != 0 ]] ; then
+	nl=$( echo "${sl}" | wc -l )
+else
+	nl=0
+fi
 
 #default return param
 exist=False
