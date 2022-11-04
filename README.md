@@ -16,7 +16,7 @@ Optionnal keys are given like [key] in syntaxe part.
 ### lns
 Launch evrything in an other screen session and open it in a new terminal.
 
-**Syntaxe**<br/>
+> **Syntaxe**<br/>
 
 ```
 lns [-options] [command] [screen_name]
@@ -24,7 +24,7 @@ lns [-options] [command] [screen_name]
 
 **Options**<br/>
 
-```-h```      display this message<br/>
+```-h```      display help message<br/>
 ```-c```      close screen after execution<br/>
 
 ### lpys
@@ -63,7 +63,7 @@ ison screen_name
 
 **Options**<br/>
 
-```-h```      display this message<br/>
+```-h```      display help message<br/>
 ```-e```      output [exist]<br/>
 ```-s```      output [state]<br/>
 ```-n```      output [number]<br/>
