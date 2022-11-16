@@ -60,7 +60,7 @@ scnx [-options] [screen_name]
 Give information about wanted screen session.
 
 ```
-ison screen_name
+ison [-options] screen_name
 ```
 &emsp; ***Options***<br/>
 
