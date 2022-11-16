@@ -1,5 +1,5 @@
 # SMC (Screen Manage Commands)
-Custom linux cmd(s) to manage several screen session.
+Custom linux commands to manage several screen session.
 
 ## Requirement
 
