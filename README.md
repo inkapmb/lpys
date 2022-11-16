@@ -20,6 +20,16 @@ sudo ./install.sh
 Optionnal input keys are given like this : [key]
 </sup>
 
+### scnx
+Connect to existing screen session and open it in a new terminal.
+
+```
+scnx [-options] [screen_name]
+```
+&emsp; ***Options***<br/>
+
+&emsp; ```-h``` &emsp; display help message<br/>
+
 ### lns
 Launch evrything in an other screen session and open it in a new terminal.
 
@@ -46,15 +56,16 @@ lpys [-options] file.py [screen_name]
 &emsp; ```-n [number_of_thread]``` &emsp; allows number of threads<br/>
 &emsp; ```-i``` &emsp; let user interact user with python shell after execution<br/>
         
-### scnx
-Connect to existing screen session and open it in a new terminal.
+### ks
+Stop execution of the screen session wanted by killing the processus.
 
 ```
-scnx [-options] [screen_name]
+ks [-options] screen_name
 ```
 &emsp; ***Options***<br/>
 
 &emsp; ```-h``` &emsp; display help message<br/>
+
 
 ### ison
 Give information about wanted screen session.
@@ -67,11 +78,12 @@ ison [-options] screen_name
 &emsp; ```-h``` &emsp; display help message<br/>
 &emsp; ```-e``` &emsp; output [exist]<br/>
 &emsp; ```-s``` &emsp; output [state]<br/>
+&emsp; ```-i``` &emsp; output [id]<br/>
 &emsp; ```-n``` &emsp; output [number]<br/>
-&emsp; ```-l``` &emsp; output [number_length]<br/>
+
 
 &emsp; ***Output***<br/>
 
-&emsp; exist:[```True/False```] state:[```on/off```] number[```int```] number_length[```int```]
+&emsp; exist:[```True/False```] state:[```on/off```] id[```int```] number[```int```]
 
 
