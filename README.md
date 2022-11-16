@@ -84,6 +84,6 @@ ison [-options] screen_name
 
 &emsp; ***Output***<br/>
 
-&emsp; exist:[```True/False```] state:[```on/off```] id[```int```] number[```int```]
+&emsp; exist:[```True/False```] state:[```on/off```] id:[```int```] number:[```int```]
 
 
