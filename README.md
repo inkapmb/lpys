@@ -76,6 +76,7 @@ ison [-options] screen_name
 &emsp; ***Options***<br/>
 
 &emsp; ```-h``` &emsp; display help message<br/>
+&emsp; ```-t``` &emsp; get sensitive to numbering format : ```.n```<br/>
 &emsp; ```-e``` &emsp; output [exist]<br/>
 &emsp; ```-s``` &emsp; output [state]<br/>
 &emsp; ```-i``` &emsp; output [id]<br/>
