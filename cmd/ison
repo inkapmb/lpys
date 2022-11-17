@@ -21,6 +21,7 @@ printf "\033[1mSyntaxe :\033[0m \033[94mison\033[0m [\033[94m-options\033[0m] \0
 printf "\n"
 printf "\033[1mOptions :\033[0m \n"
 printf "	\033[94m-h\033[0m	display this message\n"
+printf "	\033[94m-t\033[0m	get sensitive to numbering format : '.n'\n"
 printf "	\033[94m-e\033[0m	output [exist]\n"
 printf "	\033[94m-s\033[0m	output [state]\n"
 printf "	\033[94m-n\033[0m	output [number]\n"
@@ -47,10 +48,11 @@ ExprIdx()
 co=1
 out=''
 opt=False
+sm=False
 
 #get options
 
-while getopts ":hesnl:" option;
+while getopts ":htesin:" option;
 do
 	case $option in
 	
@@ -59,6 +61,11 @@ do
 			((co++))
          		exit;;
 			
+		t) #sensitive match
+			sm=True
+			((co++))
+			;;
+		
 		e) #exist
 			out=$(echo $out'e')
 			opt=True
@@ -107,53 +114,65 @@ fi
 exist=False
 state=off
 id=0
-snumber=0
-cnl=0
+
 
 
 #test if it's a screen
 for (( c=1; c<=$nl; c++ ))
 do
-
+	
+	#def
+	snumber=0
+	cnl=0
+	
 	#get the line $c
 	sedopt=$(echo $c'p')
 	line=$(printf "$sl"| sed -n $sedopt)
 	length=$((${#line} - 37))
-	
+
 	#get . index in $line
 	idxl=($(ExprIdx "$line" "\."))
-	
+
 	idp=$((${idxl[0]}))
 	lidx=$((${idxl[-1]} + 2))
-	
+
 	#ctrl str1
 	#echo "${line:$lidx:1}"
-	
+
 	#count the length of the number (str)
 	while [[ "${line:$(($lidx + $cnl)):1}" =~ ^[0-9]+$ ]] ; do
 		cnl=$(($cnl + 1))
 	done
 	
+	#echo ${line:$lidx:$cnl}
+	#echo $cnl
+
 	#get number of the screen
 	if [[ $cnl != 0 ]] ; then
 		snumber=${line:$lidx:$cnl}
+		lv=$(($cnl + 2))
 	else
 		snumber=0
+		lv=1
 	fi
 	
+	#get sensitive
+	if [[ $sm == "True" ]] ; then
+		lv=1
+	fi
+
 	#ctrl str2
 	#echo "input : $s"
 	#echo "${line:1:$length}"
 	#echo "${line:1:$idp}"
-	#echo "${line:$(($idp + 2)):$(($length - $idp - 1))}"
-	#echo "${line:$(($idp + 2)):$(($length - $idp))}"
-	
+	#echo "${line:$(($idp + 2)):$(($length - $idp - lv))}"
+
 	#test if screen Exist
-	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - 1))}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp))}" == "$s."* ]] ; then
-		
+	if [[ "${line:1:$length}" == "$s" ]] || [[ "${line:1:$idp}" == "$s" ]] || [[ "${line:$(($idp + 2)):$(($length - $idp - lv))}" == "$s" ]] ; then
+
 		exist=True
 		id=${line:1:$idp}
-		
+
 		#Test if the screen is Attached
 		if [[ ${line} == *"(Attached)"* ]] ; then
 			state=on
@@ -161,6 +180,7 @@ do
 		break
 	fi	
 done
+
 
 ############################################################
 #out                                                       #
@@ -192,4 +212,5 @@ if [[ $opt == "True" ]] ; then
 else
 	printf "$exist $state $id $snumber \n"
 fi
+
 
