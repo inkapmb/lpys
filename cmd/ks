@@ -88,7 +88,7 @@ if [[ ${#s_name} == 0 ]]; then
 fi
 
 #test if screen already exist with this name
-res=($(ison $s_name))
+res=($(ison -t $s_name))
 
 #echo $res
 
