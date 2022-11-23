@@ -28,14 +28,6 @@ printf "\n"
 printf "\033[90m############################################################\033[0m\n"
 }
 
-
-#search for substr in str
-ExprIdx()
-{
-	fpos=$( echo $1 | grep -o -b "$2" | awk 'BEGIN {FS=":"}{print $1}')
-	echo $fpos
-}
-
 #warning sign
 wrn()
 {
@@ -97,7 +89,7 @@ if [[ ${res[0]} == "True" ]] ; then
 	
 	sid=${res[2]}
 	
-elif [[ $res == "True "* ]] ; then
+elif [[ ${res[0]} == "False" ]] ; then
 	wrn
 	sde_msg $s_name
 fi
