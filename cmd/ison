@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Aug 17 13:43:04 2023
+
+@author: mahjoubp
+"""
+
+import subprocess
+import sys ,os ,time, shutil
+
+#ISON
+
+#function def -----------------------------------------------------------------
+
+#classic
+
+
+def getOA():
+    
+    opt = []
+    arg = []
+    
+    for aIn in sys.argv :
+        
+        if aIn != sys.argv[0] :
+            if aIn[0] == '-' :
+                opt.append(aIn)
+            
+            else :
+                arg.append(aIn)
+        
+    return opt, arg
+
+
+
+#personnalised
+
+def pHelp() :
+    print( "\033[90m############################################################\033[0m" )
+    print( "                          \033[1m\033[4mison HELP\033[0m" )
+    print( "\033[90m############################################################\033[0m" )
+    print( "" )
+    print( "\033[1mison\033[0m give information about wanted screen session." )
+    print( "" )
+    print( "Requierement : " )
+    print( "	> have 'screen' installed" )
+    print( "" )
+    print( "\033[1mSyntaxe :\033[0m \033[94mison\033[0m [\033[94m-options\033[0m] \033[94mscreen_name\033[0m" )
+    print( "" )
+    print( "\033[1mOptions :\033[0m " )
+    print( "	\033[94m-h\033[0m	display this message" )
+    print( "	\033[94m-e\033[0m	output [exist]" )
+    print( "	\033[94m-s\033[0m	output [aviable]" )
+    print( "	\033[94m-n\033[0m	output [number]" )
+    print( "" )
+    print( "\033[1mOutput\033[0m : exist:[\033[94mTrue\033[0m/\033[94mFalse\033[0m] aviable:[\033[94mTrue\033[0m/\033[94mFalse\033[0m] number[\033[94mint\033[0m]" )
+    print( "" )
+    print( "\033[90m############################################################\033[0m" )
+        
+    
+def wrn() :
+     print( "\033[5m\033[1m\033[93m<!>\033[0m\033[25m" )
+
+#get sliced lines     
+def getInLine(iStr) :
+    
+    lidx = []
+    nidx = 0
+    
+    for c in iStr :
+        if c == '\n' :
+            lidx.append(nidx)
+        
+        nidx += 1
+    
+    lidx.append(-1)
+    
+    lines = []
+    lst_idx = 0
+    
+    for idx in lidx :
+        
+        if idx != -1 :
+            lines.append(iStr[lst_idx:idx])
+        else :
+            lines.append(iStr[lst_idx:])
+            
+        lst_idx = idx + 1
+        
+    return lines
+
+#sorted screen info
+def getSI(rawLines) :
+    
+    rawName = []
+    numName = []
+    strName = []
+    statu = []
+    number = []
+    
+    for line in rawLines :
+        
+        charIdx = []
+        nidx = 0
+        
+        for char in line :
+            
+            if char == '\t' :
+                charIdx.append(nidx)
+            
+            nidx += 1
+        
+        rawName.append(line[charIdx[0] + 1:charIdx[1]])
+        statu.append(line[charIdx[-1] + 2:-1])
+        
+        pidx = []
+        cidx = 1
+        
+        for char in rawName[-1] :
+            if char == '.' :
+                pidx.append(cidx)
+            cidx += 1
+        
+        if len(pidx) == 1 :
+            numName.append(line[charIdx[0] + 1:pidx[0]])
+            strName.append(line[pidx[0] + 1:charIdx[1]])
+            number.append(-1)
+            
+        if len(pidx) >= 2 :
+            numName.append(line[charIdx[0] + 1:pidx[0]])
+            strName.append(line[pidx[0] + 1:charIdx[1]])
+            number.append(line[pidx[-1] + 1:charIdx[1]])
+    
+    return rawName, numName, strName, statu, number
+        
+        
+     
+# MAIN ------------------------------------------------------------------------
+
+exist_out, state_out, num_out = False, False, False
+
+opts, args = getOA()
+
+for o in opts :
+    
+    if o == '-h' :
+        pHelp()
+    
+    if o == '-e' :
+        exist_out = True
+    
+    if o == '-s' :
+        state_out = True
+    
+    if o == '-i' :
+        num_out = True
+    
+
+#get screen list
+result = subprocess.getoutput("screen -ls | grep '(*)' ")
+
+sid = 0
+
+exist = False
+state = False
+
+if result != '' :
+    #manage screen info
+    lines = getInLine(result)
+    rName, nName, sName, nStatu, num = getSI(lines)
+    
+    # print(rName, nName, sName, nStatu, num)
+
+    screen_name = args[0]
+    
+    for i in range(len(rName)) : 
+        
+        if screen_name == rName[i]  or screen_name == nName[i] or screen_name == sName[i] :
+            
+            exist = True
+            
+            sid = nName[i]
+            
+            if nStatu[i] == 'Detached' : 
+                
+                state = True
+
+#out
+if exist_out :
+    print(int(exist), end=' ')
+
+if state_out :
+    print(int(state), end=' ')
+
+if num_out :
+    print(sid, end=' ')
+
+print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
