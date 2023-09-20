@@ -68,6 +68,6 @@ ison [-options] screen_name
 
 &emsp; ***Output***<br/>
 
-&emsp; exist:[```True/False```] state:[```True/False```] id:[```int```]
+&emsp; exist:[```True/False```] aviable:[```True/False```] id:[```int```]
 
 
